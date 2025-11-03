@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-
 echo "🚀 Starting Oracle APEX Docker container setup..."
-if [ ! -f /opt/oracle/oradata/.setup-complete ]; then
+
+if [ ! -f /opt/.software-install ]; then
     # ========= Post-installation stage =========
     echo "📦 Installing dependencies..."
     rpm -ivh /tmp/*.rpm
@@ -18,7 +18,10 @@ if [ ! -f /opt/oracle/oradata/.setup-complete ]; then
     unzip /build/ords.zip -d /opt/ords/
     chown -R oracle:oinstall /opt/oracle/apex /opt/ords
     echo "✅ APEX and ORDS extracted."
+    touch /opt/.software-install
+fi
 
+if [ ! -f /opt/oracle/oradata/.software-setup ]; then
     # ======== Database Initialization =========
     echo "🔧 Configuring Oracle Database XE..."
     echo "🆕 First-time database configuration..."
@@ -78,7 +81,7 @@ EOF
 
     echo "🔒 Setting ORDS static path..."
     ords config set standalone.static.path /opt/oracle/apex/images
-    touch /opt/oracle/oradata/.setup-complete
+    touch /opt/oracle/oradata/.software-setup
 
     echo "✅ Database & APEX installation complete."
 else
