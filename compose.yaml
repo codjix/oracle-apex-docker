@@ -1,0 +1,23 @@
+services:
+  oracle-apex:
+    image: codjix/oracle-apex:latest
+    container_name: oracle-apex
+    ports:
+      - "1521:1521" # Oracle Database
+      - "8080:8080" # ORDS / APEX web access
+    environment:
+      ORACLE_PWD: "Oracle123456"
+      APEX_ADMIN_EMAIL: "admin@example.com"
+      ORDS_PWD: "Oracle123456"
+    volumes:
+      - apex_data:/opt/oracle/oradata # Persistent DB data
+    networks:
+      - apexnet
+    restart: unless-stopped
+
+volumes:
+  apex_data:
+
+networks:
+  apexnet:
+    driver: bridge
