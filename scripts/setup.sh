@@ -10,6 +10,7 @@ if [ ! -f /opt/oracle/oradata/.setup-complete ]; then
     rm -f /tmp/*.rpm
     echo "✅ Dependencies installed."
     echo "🗄️  Setting up Oracle Database XE..."
+    chown -R oracle:oinstall /opt/oracle
     rpm -ivh /build/database.rpm
     echo "✅ Oracle Database XE installed."
     echo "📂 Extracting APEX and ORDS..."

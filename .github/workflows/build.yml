@@ -1,0 +1,49 @@
+name: Build and Push Multiple Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image Version (e.g. 1.0.0)"
+        required: true
+        default: "24.2"
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - file: Dockerfile
+            tag: latest
+          - file: slim.Dockerfile
+            tag: slim
+          - file: Dockerfile
+            tag: ${{ github.event.inputs.version }}
+          - file: slim.Dockerfile
+            tag: ${{ github.event.inputs.version }}-slim
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          file: ./${{ matrix.file }}
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/oracle-apex:${{ matrix.tag }}
