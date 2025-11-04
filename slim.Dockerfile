@@ -19,10 +19,10 @@ LABEL org.opencontainers.image.title="Oracle Apex" \
     oracle.apex="${ORACLE_APEX_VERSION}"
 
 # Set environment variables
+ENV ORACLE_BASE=/opt/oracle
+ENV ORACLE_HOME=${ORACLE_BASE}/product/21c/dbhomeXE
 ENV ORACLE_DOCKER_INSTALL=true \
-    ORACLE_BASE=/opt/oracle \
-    ORACLE_HOME=/opt/oracle/product/21c/dbhomeXE \
-    PATH=$PATH:/opt/oracle/product/21c/dbhomeXE/bin:/opt/ords/bin \
+    PATH=$PATH:${ORACLE_HOME}/bin:/opt/ords/bin \
     ORACLE_PDB=XEPDB1 \
     ORACLE_SID=XE \
     # Default credentials

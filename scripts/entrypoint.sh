@@ -9,9 +9,6 @@ echo "🚀 Starting Oracle APEX Container..."
 echo "🗄️ Starting Oracle XE..."
 /etc/init.d/oracle-xe-21c start
 
-# Small delay to let DB start properly
-sleep 10
-
 echo "🌐 Starting ORDS..."
 cd /opt/ords
-exec /opt/ords/bin/ords serve
+exec ords --config $ORACLE_BASE/oradata/ords-config serve
